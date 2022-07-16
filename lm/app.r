@@ -8,6 +8,8 @@
 #
 
 library(shiny)
+library(ggplot2)
+library(ggpubr)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -54,10 +56,7 @@ ui <- fluidPage(
             radioButtons("disp", "Display",
                          choices = c(Head = "head",
                                      All = "all"),
-                         selected = "head")
-            
-             # Horizontal line ----
-            tags$hr(),
+                         selected = "head"),
             
             # Input: Select Linear Modeling ----
             radioButtons("Nonregression", "Regression",
@@ -68,8 +67,7 @@ ui <- fluidPage(
 
         # Show a plot of the generated distribution
         mainPanel(
-           plotOutput("distPlot"),
-           plotOutput("lmPlot"),
+           plotOutput("Plot"),
            tableOutput("contents")
         )
     )
