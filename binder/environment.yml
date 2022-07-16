@@ -8,6 +8,7 @@ dependencies:
   - python=3.9
   - r-dplyr
   - r-ggplot2
+  - r-ggpubr
   - r-reshape2
   - r-tidyverse
   - r-shiny
