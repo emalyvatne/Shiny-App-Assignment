@@ -13,7 +13,7 @@ library(shiny)
 ui <- fluidPage(
 
     # Application title
-    titlePanel("Old Faithful Geyser Data"),
+    titlePanel("Linear Modeling Shiny App"),
 
     # Sidebar with a slider input for number of bins 
     sidebarLayout(
@@ -55,6 +55,15 @@ ui <- fluidPage(
                          choices = c(Head = "head",
                                      All = "all"),
                          selected = "head")
+            
+             # Horizontal line ----
+            tags$hr(),
+            
+            # Input: Select Linear Modeling ----
+            radioButtons("Nonregression", "Regression",
+                         choices = c(Nonregression = "Nonrergession",
+                                     Regression = "Regression"),
+                         selected = "Nonregression")
         ),
 
         # Show a plot of the generated distribution
@@ -79,42 +88,20 @@ server <- function(input, output) {
         return(df)
     })
     
-    # output$distPlot <- renderPlot({
-    #     # generate bins based on input$bins from ui.R
-    #     x    <- faithful[, 2]
-    #     bins <- seq(min(x), max(x), length.out = input$bins + 1)
-    #     print(bins)
-    #     # draw the histogram with the specified number of bins
-    #     hist(x, breaks = bins, col = 'darkgray', border = 'white')
-    # })
-    # 
-    
-    output$distPlot <- renderPlot({
-        plot(dataInput()$x,dataInput()$y)
-    })
-    
-    output$lmtPlot <- renderPlot({
-        plot(dataInput()$x,dataInput()$y)
-    })
-    
-    
-    output$contents <- renderTable({
-        
-        # input$file1 will be NULL initially. After the user selects
-        # and uploads a file, head of that data file by default,
-        # or all rows if selected, will be shown.
-        
-        
-        if(input$disp == "head") {
-            return(head(dataInput()))
+    output$Plot <- renderPlot({
+       if(input$regression == "Nonregression") {
+        return(ggplot(data = dataInput(), aes(dataInput()$x, dataInput()$y) +
+               geom_point() +
+               geom_smooth(method = "lm", se = FALSE)
+    }
+    else {
+        return(ggplot(data = dataInput(), aes(dataInput()$x,dataInput()$y)) +
+               geom_point() +
+               geom_smooth(method = "lm", se = FALSE) +
+               stat_regline_equation(label.y = 15, aes(label = ..eq.label..)) +
+               stat_regline_equation(label.y = 13, aes(label = ..rr.label..)))
         }
-        else {
-            return(dataInput())
-        }
-        
-    })
-        
-}
-
+     })
+    
 # Run the application 
 shinyApp(ui = ui, server = server)
